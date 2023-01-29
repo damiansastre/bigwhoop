@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\weapons">
+      <UniqueIdentifier>{a965c266-62f2-40ec-b612-c659fb7c430a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\utils">
+      <UniqueIdentifier>{d5b468da-0be8-4c04-a3c9-be9d0409521d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\characters">
+      <UniqueIdentifier>{42698773-5c2b-4f56-b2cd-1c4ea28f5860}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\objects">
+      <UniqueIdentifier>{eb5bbf1c-5560-4952-b9a2-ecfe6b90030a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\characters\enemies">
+      <UniqueIdentifier>{4c53990c-3820-44de-b622-bac23cdf44fd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="room.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="door.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="item.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dungeon.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="character.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="consumable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="key.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="weapon.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cake.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mapobject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sword.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="firewand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="waterpotion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="treasure.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ogre.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="electric_harp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="room.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="door.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dungeon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cake.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="item.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="consumable.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="treasure.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="sword.h">
+      <Filter>Header Files\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="weapon.h">
+      <Filter>Header Files\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="firewand.h">
+      <Filter>Header Files\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="dc_const.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="action_response.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="attacktype.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="game_screen.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="game_status.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="tvector2d.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="character.h">
+      <Filter>Header Files\characters</Filter>
+    </ClInclude>
+    <ClInclude Include="key.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="mapobject.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="electricmage.h">
+      <Filter>Header Files\characters\enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="firemage.h">
+      <Filter>Header Files\characters\enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="watermage.h">
+      <Filter>Header Files\characters\enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="roomtype.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="tarray.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="skeleton.h">
+      <Filter>Header Files\characters\enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy_sprite_offset.h">
+      <Filter>Header Files\characters\enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy.h">
+      <Filter>Header Files\characters\enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="boss.h">
+      <Filter>Header Files\characters\enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="ogre.h">
+      <Filter>Header Files\characters\enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="waterpotion.h">
+      <Filter>Header Files\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="weapon_sprite_offset.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="electric_harp.h">
+      <Filter>Header Files\weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="player_sprite_offset.h">
+      <Filter>Header Files\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="item_sprite_offset.h">
+      <Filter>Header Files\objects</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="player.h">
+      <Filter>Header Files\characters</Filter>
+    </None>
+  </ItemGroup>
+</Project>

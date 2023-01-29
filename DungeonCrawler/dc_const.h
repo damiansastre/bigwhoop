@@ -1,0 +1,27 @@
+#pragma once
+
+/*
+Constants for Text Tile Rendering.
+*/
+enum DC_CONST
+{
+	PIXEL_SIZE = 12,
+	DOOR_SPRITE_OFFSET_X = 52,
+	DOOR_SPRITE_OFFSET_Y = 13,
+	MENU_STARTING_Y = 574,
+	MENU_A = 65,
+	MENU_T = 97,
+	MENU_X = 84,
+	MENU_SUB_1 = 123,
+	MENU_SUB_2 = 110,
+	MENU_MOD_1 = 26,
+	MENU_MOD_2 = 46,
+	MENU_EQ_1 = 32,
+	MENU_EQ_2 = 45,
+	MENU_EQ_3 = 58,
+	MENU_EQ_4 = 48,
+	MENU_EQ_5 = 57,
+	MENU_SUB_3 = 29,
+	MENU_SUB_4 = 54,
+	MENU_SUB_5 = 48,
+};
