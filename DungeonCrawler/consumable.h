@@ -25,6 +25,7 @@ public:
 	
 	virtual void PickUp();
 	virtual bool IsPickedUp();
+	virtual ActionResponse Consume();
 
 protected:
 	std::string name;

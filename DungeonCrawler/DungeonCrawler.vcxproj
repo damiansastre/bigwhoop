@@ -128,6 +128,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="boss.cpp" />
     <ClCompile Include="cake.cpp" />
     <ClCompile Include="character.cpp" />
     <ClCompile Include="consumable.cpp" />
@@ -141,7 +142,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mapobject.cpp" />
     <ClCompile Include="game.cpp" />
-    <ClCompile Include="ogre.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="room.cpp" />
     <ClCompile Include="sword.cpp" />
@@ -159,15 +159,18 @@
     <ClInclude Include="door.h" />
     <ClInclude Include="dungeon.h" />
     <ClInclude Include="electricmage.h" />
+    <ClInclude Include="electric_chicken.h" />
     <ClInclude Include="electric_harp.h" />
     <ClInclude Include="enemy.h" />
     <ClInclude Include="enemy_sprite_offset.h" />
     <ClInclude Include="firemage.h" />
     <ClInclude Include="firewand.h" />
     <ClInclude Include="dc_const.h" />
+    <ClInclude Include="fire_lord.h" />
     <ClInclude Include="game_screen.h" />
     <ClInclude Include="game_status.h" />
     <ClInclude Include="item_sprite_offset.h" />
+    <ClInclude Include="magic_spaceman.h" />
     <ClInclude Include="ogre.h" />
     <ClInclude Include="player_sprite_offset.h" />
     <ClInclude Include="skeleton.h" />
@@ -183,6 +186,7 @@
     <ClInclude Include="tvector2d.h" />
     <ClInclude Include="watermage.h" />
     <ClInclude Include="waterpotion.h" />
+    <ClInclude Include="water_alien.h" />
     <ClInclude Include="weapon.h" />
     <ClInclude Include="weapon_sprite_offset.h" />
   </ItemGroup>

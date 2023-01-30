@@ -52,9 +52,10 @@ ActionResponse Door::TriggerAction()
 {
 	if (Closed())
 	{
-		return ActionResponse{ false, "Door is Locked", ActionType::LOCKED };
+		std::cout << "IT IS LOCKED" << std::endl;
+		return ActionResponse{ false, 0, "Door is Locked", ActionType::LOCKED };
 	}
 	
-	return { false, "You Entered a new Room", ActionType::MOVE_ROOM};	
+	return { false, 0, "", ActionType::MOVE_ROOM};	
 }
 

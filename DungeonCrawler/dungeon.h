@@ -40,7 +40,8 @@ public:
     void HandleMoveRoom(TVector2D<int> new_position, ActionResponse& action_response);
     void HandleAttack(TVector2D<int> new_position, ActionResponse& action_response);
     void EnterRoom(Door* door, ActionResponse& action_response);
-   
+    ActionResponse HandleConsumeAction();
+
     // Menu Actions
     bool HasToggleMenu();
     void ToggleMenu();

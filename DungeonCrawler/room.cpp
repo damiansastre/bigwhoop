@@ -8,10 +8,15 @@
 #include "cake.h"
 
 #include "skeleton.h"
-#include "ogre.h"
 #include "electricmage.h"
 #include "firemage.h"
 #include "watermage.h"
+
+#include "ogre.h"
+#include "water_alien.h"
+#include "fire_lord.h"
+#include "magic_spaceman.h"
+#include "electric_chicken.h"
 
 #include "electric_harp.h"
 #include "firewand.h"
@@ -135,8 +140,18 @@ void Room::CreateBoss()
 	case BossType::OGRE:
 		CreateItem<Ogre>(item_lower_boundaries, item_upper_boundaries);
 		break;
-
-
+	case BossType::MAGICSPACEMAN:
+		CreateItem<MagicSpaceman>(item_lower_boundaries, item_upper_boundaries);
+		break;
+	case BossType::ELECTRICHICHEN:
+		CreateItem<ElectricChicken>(item_lower_boundaries, item_upper_boundaries);
+		break;
+	case BossType::FIRELORD:
+		CreateItem<FireLord>(item_lower_boundaries, item_upper_boundaries);
+		break;
+	case BossType::WATERALIEN:
+		CreateItem<WaterAlien>(item_lower_boundaries, item_upper_boundaries);
+		break;
 	}
 }
 // Create randomly located consumables.
@@ -323,7 +338,7 @@ ActionResponse Room::TriggerTileAction(TVector2D<int> position)
 			return items.getElement(itemPosition)->TriggerAction();
 		}
 	}
-	return ActionResponse{ true , "", ActionType::NONE };
+	return ActionResponse{ true , 0, "", ActionType::NONE };
 }
 // Sets the room Type
 void Room::SetRoomType(RoomType room_type)

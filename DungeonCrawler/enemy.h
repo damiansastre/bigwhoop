@@ -30,8 +30,9 @@ public:
 	//Actions
 	virtual ActionResponse Attack(Player* player);
 	virtual ActionResponse TriggerAction() override;
+	virtual std::string GetAttackNotification(int player_attack_power, int attack_power);
 	virtual std::string GetNotification() override;
-
 protected:
 	std::string name;
+	bool notified = false;
 };

@@ -84,10 +84,10 @@
     <ClCompile Include="treasure.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ogre.cpp">
+    <ClCompile Include="electric_harp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="electric_harp.cpp">
+    <ClCompile Include="boss.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -196,6 +196,18 @@
     </ClInclude>
     <ClInclude Include="item_sprite_offset.h">
       <Filter>Header Files\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="electric_chicken.h">
+      <Filter>Header Files\characters\enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="magic_spaceman.h">
+      <Filter>Header Files\characters\enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="fire_lord.h">
+      <Filter>Header Files\characters\enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="water_alien.h">
+      <Filter>Header Files\characters\enemies</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

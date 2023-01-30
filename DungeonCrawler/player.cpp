@@ -13,7 +13,7 @@
 Player::Player()
 {
     sprite_offset = { PLAYER_SPRITE_OFFSET_X, PLAYER_SPRITE_OFFSET_Y };
-    health = 100;
+    health = 500;
     attack_power = 10;
 }
 Player::~Player()
@@ -62,6 +62,10 @@ void Player::RemoveItemFromInventory(Item* item)
 void Player::IncreaseRoomsVisited()
 {
     ++roomsVisited;
+}
+std::string Player::GetNotification()
+{
+    return "GAME OVER: YOU ARE DEAD";
 }
 // Handles players move action.
 ActionResponse Player::HandleMoveAction(TVector2D<int> newPosition)
@@ -165,6 +169,16 @@ AttackType Player::GetAttackType()
 void Player::Kill()
 {
     SetSprite({PLAYER_SPRITE_DEAD_OFFSET_X, PLAYER_SPRITE_DEAD_OFFSET_Y});
+}
+
+void Player::SetLastAttacked(Enemy* enemy)
+{
+    last_attacked = enemy;
+}
+
+Enemy* Player::GetLastAttacked()
+{
+    return last_attacked;
 }
 
 // Returns current Room.

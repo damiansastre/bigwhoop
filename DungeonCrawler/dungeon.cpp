@@ -117,6 +117,22 @@ void Dungeon::RenderGame()
     }
 }
 
+/* 
+Handles Consume action by type
+Placeholder method for when more consumables exist.
+*/
+ActionResponse Dungeon::HandleConsumeAction()
+{
+    ActionResponse action_response = player->Consume<Cake>();
+
+    switch (action_response.action_type)
+    {
+    case ActionType::HEAL:
+        player->Heal(action_response.value);
+        break;
+    }
+    return action_response;
+}
 /*
 Handles User input for weapon equipment.
 */
@@ -138,6 +154,9 @@ void Dungeon::HandleEquippedWeapon()
     }
     if (GetKey(olc::Key::E).bHeld) {
         action_response = player->EquipWeapon<ElectricHarp>();
+    }
+    if (GetKey(olc::Key::C).bHeld) {
+        action_response = HandleConsumeAction();
     }
     if (action_response.notification != "")
     {
@@ -219,17 +238,19 @@ bool Dungeon::OnUserUpdate(float fElapsedTime)
     if (HasToggleMenu())
     {
         ToggleMenu();
+        return true;
     }
     // Checks if player restarted the game after dead.
     if (game_screen == GameScreen::END && ShouldRestart())
     {
         RestartGame();
+        return true;
     }
     // 
-    if (!player->IsAlive())// && ShouldRestart())
-    {
-        RenderEndGame();
-    }
+   // if (!player->IsAlive())// && ShouldRestart())
+   // {
+    //    RenderEndGame();
+    //}
     // Checks if user has equipped a weapon
     HandleEquippedWeapon();
 
@@ -243,7 +264,7 @@ bool Dungeon::OnUserUpdate(float fElapsedTime)
     case ActionType::PICKUP:
         HandlePickUP(new_position, action_response);
         break; 
-    case ActionType::NEW_ROOM:
+    case ActionType::MOVE_ROOM:
         HandleMoveRoom(new_position, action_response);
         break;
     case ActionType::ATTACK:
@@ -266,7 +287,12 @@ bool Dungeon::OnUserUpdate(float fElapsedTime)
 void Dungeon::HandleAttack(TVector2D<int> new_position, ActionResponse& action_response)
 {
     Enemy* enemy = dynamic_cast<Enemy*>(player->GetCurrentRoom()->GetObjectByPosition(new_position));
-    enemy->Attack(player);
+    action_response = enemy->Attack(player);
+    player->SetLastAttacked(enemy);
+    if (!player->IsAlive())
+    {
+        action_response.notification = player->GetNotification();
+    }
 }
 
 // Handles Item Pick UP actions.
@@ -292,7 +318,6 @@ void Dungeon::EnterRoom(Door* door, ActionResponse& action_response)
     player->SetCurrentRoom(door->GetNextRoom());
     player->RemoveItemFromInventory(dynamic_cast<Item*>(door->GetKey()));
     player->SetPosition(player->GetOppositePosition(door->GetPosition(), door->GetNextRoom()->GetSize()));
-    action_response.notification = "Entered a new Room";
 }
 /* Handles locked doors
     if A door is locked and the player has the corresponding key, open the door and move player to the next room.
@@ -314,6 +339,8 @@ void Dungeon::HandleLockedDoor(TVector2D<int> door_position, ActionResponse& act
         door->SetNextRoom(newRoom);
         player->IncreaseRoomsVisited();
     }
+    action_response.notification = "Entered a new Room";
+
     return EnterRoom(door, action_response);
 }
 

@@ -12,4 +12,7 @@ public:
 	Cake();
 	Cake(std::string name, TVector2D<int> position);
 	~Cake();
+	virtual ActionResponse Consume() override;
+private:
+	int value = 0;
 };

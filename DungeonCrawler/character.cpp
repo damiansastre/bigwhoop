@@ -22,11 +22,10 @@ AttackType Character::GetAttackType()
 	return attack_type;
 }
 // Gets player Attack description for ingame notifications
-std::string Character::GetAttackTypeDescription()
+std::string Character::GetAttackTypeDescription(AttackType attack_type)
 {
-	AttackType current_attack_type = GetAttackType();
     std::string attack_description = "";
-    switch(current_attack_type)
+    switch(attack_type)
     {
 	    case AttackType::ELECTRIC:
         {
@@ -38,11 +37,6 @@ std::string Character::GetAttackTypeDescription()
             attack_description = "FIRE";
             break;
         }
-        case AttackType::PHYSICAL:
-        {
-            attack_description = "PHYSICAL";
-            break;
-        }
         case AttackType::WATER:
         {
             attack_description = "WATER";
@@ -51,6 +45,11 @@ std::string Character::GetAttackTypeDescription()
         case AttackType::MAGIC:
         {
             attack_description = "MAGIC";
+            break;
+        }
+        default:
+        {
+            attack_description = "PHYSICAL";
             break;
         }
 
@@ -72,6 +71,10 @@ void Character::SetSprite(TVector2D<int> spritePosition)
 void Character::Damage(int damage)
 {
 	health -= damage;
+    if (health < 0)
+    {
+        Kill();
+    }
 
 }
 // Heals the character

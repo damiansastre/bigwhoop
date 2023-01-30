@@ -1,4 +1,5 @@
 #include "game.h"
+#include "boss.h"
 #include "item.h"
 #include "player.h"
 #include "dc_const.h"
@@ -142,38 +143,46 @@ void Game::RenderItemTile(TVector2D<int>& item_sprite_offset, TVector2D<int> ini
     DrawPartialSprite(spritePosition, tileset, spriteOffset, spriteSize);
 }
 
-// Renders player inventory window
-void Game::RenderInventory()
+//Render player's inventory items
+void Game::RenderInventoryItems()
 {
-    // Player Stats
-    std::string health = "HEALTH        ";
-    health += std::to_string(GetPlayer()->GetHealth());
-    std::string atk = "ATK ";
-    atk += std::to_string(GetPlayer()->GetAttackPower());
-    std::string atkType = "ATK TYPE ";
-    atkType += GetPlayer()->GetAttackTypeDescription();
-
-    RenderTextTile(health, { 11, 0 });
-    RenderTextTile(atk, { 11, 1 });
-    RenderTextTile(atkType, { 11, 2 });
-    RenderTextTile("BOSS HEALTH   100", { 11, 4 });
     DrawLine(120, 45, ScreenWidth(), 45, olc::BLUE);
 
     // Player Items
-    RenderTextTile("INVENTORY", {11, 6});
+    RenderTextTile("INVENTORY", { 10, 8 });
     int inventoryPadding = 0;
     int itemCounter = 0;
     for (int i = 0; i < player->GetInventorySize(); ++i)
     {
-        if (i % 8 == 0)
+        if (i % 10 == 0)
         {
             inventoryPadding += 1;
             itemCounter = 0;
         }
-        RenderItemTile(player->GetInventoryItem(i)->GetSpritePosition(), { 10 + itemCounter, 7 + inventoryPadding });
+        RenderItemTile(player->GetInventoryItem(i)->GetSpritePosition(), { 10 + itemCounter, 8 + inventoryPadding });
         itemCounter += 1;
     }
+}
 
+// Render Player Stats
+void Game::RenderPlayerStats()
+{
+    // Player Stats
+    std::string health = "HEALTH        ";
+    health += std::to_string(GetPlayer()->GetHealth());
+    std::string atk = "ATK           ";
+    atk += std::to_string(GetPlayer()->GetAttackPower());
+    std::string atkType = "ATK TYPE ";
+    atkType += GetPlayer()->GetAttackTypeDescription(player->GetAttackType());
+
+    RenderTextTile(health, { 10, 0 });
+    RenderTextTile(atk, { 10, 1 });
+    RenderTextTile(atkType, { 10, 2 });
+}
+
+// Render Notifications
+void Game::RenderNotifications()
+{
     RenderTextTile("Activity Log", { 0, 11 });
 
     // Notifications.
@@ -181,18 +190,52 @@ void Game::RenderInventory()
     {
         for (int i = notifications.num() - 1; i >= 0; --i)
         {
-            RenderTextTile(notifications.getElement(i), { 0, 11+ (notifications.num()-i)});
-
+            RenderTextTile(notifications.getElement(i), { 0, 10 + (notifications.num() - i) });
         }
     }
 
-    // End game space bar restart.
+}
+
+// Render Game restart menu
+void Game::RenderRestart()
+{
     if (!player->IsAlive())
     {
         RenderTextTile("Press spacebar to restart", { 0, 15 });
 
     }
-    
+}
+// Renders player inventory window
+void Game::RenderInventory()
+{
+    RenderPlayerStats();
+    RenderEnemyHealth();
+    RenderInventoryItems();
+    RenderNotifications();
+    RenderRestart();
+}
+
+void Game::RenderEnemyHealth()
+{
+    Enemy* last_attacked = player->GetLastAttacked();
+    if (last_attacked != nullptr)
+    {
+        RenderTextTile("ENEMY", { 10, 4 });
+
+        int health = last_attacked->GetHealth();
+        if (health > 0)
+        {
+            RenderTextTile("HEALTH      " + std::to_string(health), { 10, 5 });
+            Boss* boss = dynamic_cast<Boss*>(last_attacked);
+            std::string resistance = "None";
+            if (boss != nullptr)
+            {
+                resistance = boss->GetAttackTypeDescription(boss->GetResistance());
+            }
+            RenderTextTile("RES       " + resistance, { 10, 6 });
+
+        }
+    }
 }
 
 // Renders menu
@@ -205,12 +248,15 @@ void Game::RenderMenu()
     TVector2D<int> treasure = TVector2D<int>(559, 533);
     RenderItemTile(treasure, { 1, 3 });
     RenderItemTile(treasure, { 22, 3 });
-    RenderTextTile("Weapon               Hot Key", { 2, 6 });
+    RenderTextTile("Weapon                 Key", { 2, 6 });
     RenderTextTile("Mighty Pirate Sword     S", { 2, 7 });
     RenderTextTile("Fire Wand               W", { 2, 8 });
     RenderTextTile("Water potion            Q", { 2, 9 });
     RenderTextTile("Electric Harp           E", { 2, 10 });
-    RenderTextTile("Press ESC to back to game", { 2, 12 });
+    RenderTextTile("Consumable               ", { 2, 11 });
+    RenderTextTile("Cake                    C", { 2, 12 });
+
+    RenderTextTile("Press ESC to return      ", { 2, 14 });
 }
 
 // Renders Game End.
@@ -222,10 +268,5 @@ void Game::RenderEndGame()
         RenderTextTile("YOU FOUND BIG WHOOP", { 4, 1 });
         RenderTextTile("Press SPACEBAR to Restart", { 2, 12 });
     }
-    else
-    {
-        notifications.addElement("YOU ARE DEAD");
-    }
-
 }
 

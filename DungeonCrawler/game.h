@@ -22,7 +22,12 @@ public:
 	void SetTileSet(olc::Sprite* tileset);
 	void RenderTextTile(std::string text, TVector2D<int> position);
 	void RenderItemTile(TVector2D<int>& spritePosition, TVector2D<int> position);
+	void RenderEnemyHealth();
 	void RenderInventory();
+	void RenderInventoryItems();
+	void RenderPlayerStats();
+	void RenderNotifications();
+	void RenderRestart();
 	void RenderMenu();
 	virtual void RenderEndGame();
 

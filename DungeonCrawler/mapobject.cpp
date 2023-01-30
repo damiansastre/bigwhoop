@@ -43,7 +43,7 @@ bool MapObject::ShouldRender()
 // Triggers a map object action.
 ActionResponse MapObject::TriggerAction()
 {
-	return ActionResponse{ true, "", ActionType::NONE };
+	return ActionResponse{ true, 0, "", ActionType::NONE };
 }
 
 // Gets the current sprite position.

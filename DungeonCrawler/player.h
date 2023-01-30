@@ -1,6 +1,7 @@
 #pragma once
 #include "character.h"
 #include "weapon.h"
+#include "enemy.h"
 class Key;
 class Item;
 class Room;
@@ -32,7 +33,11 @@ public:
 	virtual int GetAttackPower() override;
 	virtual AttackType GetAttackType() override;
 	virtual void Kill() override;
+	void SetLastAttacked(Enemy* enemy);
+	Enemy* GetLastAttacked();
 
+	// Notifications
+	virtual std::string GetNotification() override;
 	//Movement 
 	ActionResponse HandleMoveAction(TVector2D<int> newPosition);
 
@@ -51,17 +56,32 @@ public:
 				{
 					weapon = new_weapon;
 					sprite_offset = weapon->GetPlayerEquippedSprite();
-					return { false, "Equipped " + weapon->GetName(), ActionType::NONE };
+					return { false, 0, "Equipped " + weapon->GetName(), ActionType::NONE };
 				}
 			}
 		}
-		return { false, "", ActionType::NONE };
+		return { false, 0, "", ActionType::NONE };
 	};
-	
+	template <typename C>
+	ActionResponse Consume()
+	{
+		for (int index = 0; index < inventory.num(); ++index)
+		{
+			C* consumable = dynamic_cast<C*>(inventory.getElement(index));
+			if (consumable != nullptr)
+			{
+				ActionResponse action_response = consumable->Consume();
+				RemoveItemFromInventory(consumable);
+				return action_response;
+			}
+		}
+		return { false, 0, "", ActionType::NONE };
+	}
 private:
 	TArray<Item*> inventory = TArray<Item*>(10);
 	Weapon* weapon = nullptr;
 	Room* currentRoom = nullptr;
+	Enemy* last_attacked = nullptr;
 	int roomsVisited = 0;
 };
 

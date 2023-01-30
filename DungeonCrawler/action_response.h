@@ -13,7 +13,9 @@ enum class ActionType : uint8_t
 	MOVE_ROOM,
 	NEW_ROOM,
 	ENEMY_KILLED,
-	ATTACK
+	ATTACK,
+	CONSUME,
+	HEAL
 };
 
 /*
@@ -27,6 +29,7 @@ The idea behind this class is to make actions independent of the caller and base
 struct ActionResponse
 {
 	bool should_move = false;
+	int value = 0;
 	std::string notification = "";
 	ActionType action_type= ActionType::NONE;
 };

@@ -4,7 +4,10 @@
 enum class BossType : uint8_t
 {
 	OGRE,
-	//PURPLE,
+	WATERALIEN,
+	FIRELORD,
+	ELECTRICHICHEN,
+	MAGICSPACEMAN,
 	BOSS_NUM, // Easy way of getting the amount of enemies for random creation when creating a room
 };
 
@@ -19,6 +22,10 @@ public:
 	Boss() {};
 	~Boss() {};
 
-	virtual void OnRenderedNotification() {};
+	virtual void SetResistance(AttackType resistance);
+	virtual AttackType GetResistance();
+	virtual ActionResponse Attack(Player* player) override;
+protected:
+	AttackType resistance;
 };
 

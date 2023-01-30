@@ -28,7 +28,7 @@ public:
 	// Attacks
 	virtual int GetAttackPower();
 	virtual AttackType GetAttackType();
-	virtual std::string GetAttackTypeDescription();
+	virtual std::string GetAttackTypeDescription(AttackType attack_type);
 	virtual void Kill();
 
 protected:

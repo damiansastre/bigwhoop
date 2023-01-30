@@ -34,3 +34,8 @@ bool Consumable::IsPickedUp()
 {
 	return picked_up;
 }
+
+ActionResponse Consumable::Consume()
+{
+	return { true, 0,  "", ActionType::CONSUME };
+}
