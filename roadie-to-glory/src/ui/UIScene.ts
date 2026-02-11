@@ -18,6 +18,24 @@ const VERBS = [
   { id: 'use', label: 'Use' }
 ];
 
+// Monkey Island-style character colors
+const SPEAKER_COLORS: Record<string, string> = {
+  'sal': '#cc8844',
+  'barkeep': '#88aa66',
+  'rick': '#88aa66',
+  'val': '#ee66cc',
+  'groupie': '#ee66cc',
+  'eddie': '#6699ee',
+  'narrator': '#ffffff',
+};
+
+// Map storyId to the NPC's hotspot id
+const STORY_TO_NPC: Record<string, string> = {
+  'sal': 'sal',
+  'barkeep': 'barkeep',
+  'groupie': 'groupie',
+};
+
 export class UIScene extends Phaser.Scene {
   private verbTexts: Map<string, Phaser.GameObjects.Text> = new Map();
   private inventorySlots: Phaser.GameObjects.Container[] = [];
@@ -28,6 +46,10 @@ export class UIScene extends Phaser.Scene {
   private isDialogueOpen = false;
   private saveButton!: Phaser.GameObjects.Text;
   private loadButton!: Phaser.GameObjects.Text;
+  private activeStoryNpc: string | null = null;
+  private dialogueLines: { text: string; speaker: string }[] = [];
+  private dialogueLineIndex = 0;
+  private dialogueChoices: { text: string; index: number }[] = [];
 
   constructor() {
     super({ key: 'UIScene' });
@@ -245,90 +267,206 @@ export class UIScene extends Phaser.Scene {
     const result = dialogueManager.startStory(storyId);
     if (!result) return;
     this.isDialogueOpen = true;
-    this.showDialogue(result);
+    this.activeStoryNpc = STORY_TO_NPC[storyId] || storyId;
+
+    // Parse all lines into {text, speaker} pairs
+    this.dialogueLines = [];
+    for (const line of result.lines) {
+      const parsed = this.parseSpeaker(line.text);
+      this.dialogueLines.push(parsed);
+    }
+    this.dialogueChoices = result.choices;
+    this.dialogueLineIndex = 0;
+
+    this.showNextBubble();
   }
 
-  showDialogue(result: DialogueResult): void {
-    // Clear previous dialogue content
+  parseSpeaker(text: string): { text: string; speaker: string } {
+    // Match "Name: dialogue" pattern
+    const match = text.match(/^([A-Z][a-z]+)\s*:\s*(.+)$/s);
+    if (match) {
+      return { speaker: match[1].toLowerCase(), text: match[2] };
+    }
+    // Narration — no speaker prefix
+    return { speaker: 'narrator', text };
+  }
+
+  getCharacterWorldPos(id: string): { x: number; y: number } | null {
+    const currentScene = gameState.currentScene;
+    const scene = this.scene.get(currentScene) as any;
+    if (scene && typeof scene.getCharacterPosition === 'function') {
+      return scene.getCharacterPosition(id);
+    }
+    return null;
+  }
+
+  showNextBubble(): void {
     this.dialogueContainer.removeAll(true);
     this.dialogueContainer.setVisible(true);
 
-    // Dialogue overlay background
-    const overlay = this.add.rectangle(480, 270, 960, 540, 0x000000, 0.6)
-      .setInteractive(); // Block clicks through
+    // Transparent click-catcher overlay (no darkening)
+    const overlay = this.add.rectangle(480, 270, 960, 540, 0x000000, 0)
+      .setInteractive();
     this.dialogueContainer.add(overlay);
 
-    // Dialogue box
-    const boxWidth = 700;
-    const boxX = 480;
-    let boxY = 150;
-
-    const bg = this.add.rectangle(boxX, boxY, boxWidth, 40, 0x111133, 0.95)
-      .setStrokeStyle(2, 0x444488);
-    this.dialogueContainer.add(bg);
-
-    // Display dialogue lines
-    let yOffset = boxY - 10;
-    for (const line of result.lines) {
-      const lineText = this.add.text(boxX, yOffset, line.text, {
-        fontSize: '14px',
-        color: '#ffffff',
-        fontFamily: 'monospace',
-        wordWrap: { width: boxWidth - 40 },
-        align: 'left'
-      }).setOrigin(0.5, 0);
-      this.dialogueContainer.add(lineText);
-      yOffset += lineText.height + 10;
-    }
-
-    // Resize dialogue box to fit content
-    const contentHeight = yOffset - (boxY - 10) + 20;
-    bg.setSize(boxWidth, contentHeight);
-    bg.setPosition(boxX, boxY + contentHeight / 2 - 20);
-
-    // Display choices
-    if (result.choices.length > 0) {
-      let choiceY = yOffset + 30;
-      for (const choice of result.choices) {
-        const choiceText = this.add.text(boxX, choiceY, `> ${choice.text}`, {
-          fontSize: '13px',
-          color: '#88aaff',
-          fontFamily: 'monospace',
-          wordWrap: { width: boxWidth - 60 },
-          align: 'left'
-        }).setOrigin(0.5, 0).setInteractive({ useHandCursor: true });
-
-        choiceText.on('pointerover', () => choiceText.setColor('#ffff88'));
-        choiceText.on('pointerout', () => choiceText.setColor('#88aaff'));
-        choiceText.on('pointerdown', () => {
-          const nextResult = dialogueManager.chooseChoice(choice.index);
-          if (nextResult) {
-            if (nextResult.lines.length === 0 && nextResult.choices.length === 0) {
-              this.closeDialogue();
-            } else {
-              this.showDialogue(nextResult);
-            }
-          } else {
-            this.closeDialogue();
-          }
-        });
-
-        this.dialogueContainer.add(choiceText);
-        choiceY += choiceText.height + 12;
-      }
-    } else {
-      // No choices — click to close
-      const closeHint = this.add.text(boxX, yOffset + 20, '[Click to continue]', {
-        fontSize: '11px',
-        color: '#666688',
-        fontFamily: 'monospace'
-      }).setOrigin(0.5, 0);
-      this.dialogueContainer.add(closeHint);
+    // Are there lines left to show?
+    if (this.dialogueLineIndex < this.dialogueLines.length) {
+      const line = this.dialogueLines[this.dialogueLineIndex];
+      this.showSpeechBubble(line.speaker, line.text);
 
       overlay.on('pointerdown', () => {
-        this.closeDialogue();
+        this.dialogueLineIndex++;
+        this.showNextBubble();
       });
+    } else if (this.dialogueChoices.length > 0) {
+      // All lines shown, now show choices near Eddie
+      this.showChoices(this.dialogueChoices);
+    } else {
+      // Nothing left — close
+      this.closeDialogue();
     }
+  }
+
+  showSpeechBubble(speaker: string, text: string): void {
+    const maxWidth = 280;
+    const padding = 10;
+    const color = SPEAKER_COLORS[speaker] || '#ffffff';
+
+    // Determine position — above the speaking character
+    let posX: number;
+    let posY: number;
+
+    if (speaker === 'narrator') {
+      // Narration: show above the NPC being talked to
+      const npcPos = this.activeStoryNpc ? this.getCharacterWorldPos(this.activeStoryNpc) : null;
+      if (npcPos) {
+        posX = npcPos.x;
+        posY = npcPos.y - 8;
+      } else {
+        posX = 480;
+        posY = 120;
+      }
+    } else if (speaker === 'eddie') {
+      const eddiePos = this.getCharacterWorldPos('eddie');
+      if (eddiePos) {
+        posX = eddiePos.x;
+        posY = eddiePos.y - 8;
+      } else {
+        posX = 200;
+        posY = 260;
+      }
+    } else {
+      // NPC speaker — try to find by name matching hotspot/story id
+      const npcPos = this.getCharacterWorldPos(speaker) || (this.activeStoryNpc ? this.getCharacterWorldPos(this.activeStoryNpc) : null);
+      if (npcPos) {
+        posX = npcPos.x;
+        posY = npcPos.y - 8;
+      } else {
+        posX = 480;
+        posY = 120;
+      }
+    }
+
+    // Clamp so bubble stays on screen
+    posX = Math.max(maxWidth / 2 + 10, Math.min(960 - maxWidth / 2 - 10, posX));
+    posY = Math.max(30, Math.min(280, posY));
+
+    // Speech text
+    const speechText = this.add.text(posX, posY, text, {
+      fontSize: '13px',
+      color: color,
+      fontFamily: 'monospace',
+      fontStyle: 'bold',
+      wordWrap: { width: maxWidth },
+      align: 'center',
+      stroke: '#000000',
+      strokeThickness: 3,
+    }).setOrigin(0.5, 1).setDepth(201);
+    this.dialogueContainer.add(speechText);
+
+    // Background bubble behind text
+    const bounds = speechText.getBounds();
+    const bg = this.add.rectangle(
+      bounds.centerX, bounds.centerY,
+      bounds.width + padding * 2, bounds.height + padding * 2,
+      0x000000, 0.5
+    ).setStrokeStyle(1, 0x444488).setDepth(200);
+    this.dialogueContainer.add(bg);
+    this.dialogueContainer.sendToBack(bg);
+
+    // Keep overlay at very back
+    const overlayObj = this.dialogueContainer.getAt(0);
+    this.dialogueContainer.sendToBack(overlayObj);
+  }
+
+  showChoices(choices: { text: string; index: number }[]): void {
+    // Show player choices near Eddie's position, slightly above the UI bar
+    const eddiePos = this.getCharacterWorldPos('eddie');
+    const baseX = eddiePos ? Math.max(180, Math.min(780, eddiePos.x)) : 480;
+    const baseY = eddiePos ? Math.min(eddiePos.y - 8, 260) : 200;
+
+    const maxWidth = 300;
+    let yOff = baseY;
+
+    for (const choice of choices) {
+      const choiceText = this.add.text(baseX, yOff, `> ${choice.text}`, {
+        fontSize: '13px',
+        color: SPEAKER_COLORS['eddie'],
+        fontFamily: 'monospace',
+        fontStyle: 'bold',
+        wordWrap: { width: maxWidth },
+        align: 'left',
+        stroke: '#000000',
+        strokeThickness: 3,
+      }).setOrigin(0.5, 1).setDepth(201).setInteractive({ useHandCursor: true });
+
+      const bgChoice = this.add.rectangle(
+        choiceText.getBounds().centerX, choiceText.getBounds().centerY,
+        choiceText.getBounds().width + 16, choiceText.getBounds().height + 8,
+        0x000000, 0.5
+      ).setStrokeStyle(1, 0x444488).setDepth(200);
+
+      choiceText.on('pointerover', () => {
+        choiceText.setColor('#ffff88');
+      });
+      choiceText.on('pointerout', () => {
+        choiceText.setColor(SPEAKER_COLORS['eddie']);
+      });
+      choiceText.on('pointerdown', () => {
+        const nextResult = dialogueManager.chooseChoice(choice.index);
+        if (nextResult) {
+          if (nextResult.lines.length === 0 && nextResult.choices.length === 0) {
+            this.closeDialogue();
+          } else {
+            // Feed new lines/choices into the bubble system
+            this.dialogueLines = [];
+            for (const line of nextResult.lines) {
+              this.dialogueLines.push(this.parseSpeaker(line.text));
+            }
+            this.dialogueChoices = nextResult.choices;
+            this.dialogueLineIndex = 0;
+            this.showNextBubble();
+          }
+        } else {
+          this.closeDialogue();
+        }
+      });
+
+      this.dialogueContainer.add(bgChoice);
+      this.dialogueContainer.add(choiceText);
+      yOff -= choiceText.height + 12;
+    }
+  }
+
+  showDialogue(result: DialogueResult): void {
+    // Legacy entry point — redirect to bubble system
+    this.dialogueLines = [];
+    for (const line of result.lines) {
+      this.dialogueLines.push(this.parseSpeaker(line.text));
+    }
+    this.dialogueChoices = result.choices;
+    this.dialogueLineIndex = 0;
+    this.showNextBubble();
   }
 
   closeDialogue(): void {

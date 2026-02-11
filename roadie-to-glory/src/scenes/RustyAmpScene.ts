@@ -496,6 +496,18 @@ export class RustyAmpScene extends Phaser.Scene {
     ui.events.emit('hotspot-name', name);
   }
 
+  getCharacterPosition(id: string): { x: number; y: number } | null {
+    if (id === 'eddie' || id === 'player') {
+      return { x: this.player.x, y: this.player.y - 48 };
+    }
+    const hotspot = this.hotspots.find(h => h.id === id || h.storyId === id);
+    if (hotspot) {
+      const sprite = hotspot.sprite;
+      return { x: sprite.x, y: sprite.getBounds().top };
+    }
+    return null;
+  }
+
   transitionTo(sceneKey: string): void {
     gameState.playerPosition = { x: 80, y: 370 };
     this.cameras.main.fadeOut(400, 0, 0, 0);
