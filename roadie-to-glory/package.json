@@ -1,0 +1,21 @@
+{
+  "name": "roadie-to-glory",
+  "version": "1.0.0",
+  "description": "A browser-based point-and-click adventure game built with Phaser 3 and inkjs",
+  "main": "src/main.ts",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "compile-ink": "node scripts/compile-ink.js",
+    "prebuild": "node scripts/compile-ink.js"
+  },
+  "dependencies": {
+    "inkjs": "^2.2.0",
+    "phaser": "^3.60.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.0",
+    "vite": "^5.0.0"
+  }
+}
