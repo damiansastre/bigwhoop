@@ -57,12 +57,12 @@ export class BackAlleyScene extends Phaser.Scene {
       frequency: 200
     }).setDepth(1);
 
-    // Player
+    // Player (sprite sheet: row 0 = front, row 2 = side; 256x256 frames scaled down)
     this.player = this.add.sprite(
       gameState.playerPosition.x,
       gameState.playerPosition.y,
-      'eddie'
-    ).setDepth(5).setOrigin(0.5, 1);
+      'eddie_sheet', 0
+    ).setDepth(5).setOrigin(0.5, 1).setScale(0.25);
 
     this.setupHotspots();
 
@@ -303,8 +303,8 @@ export class BackAlleyScene extends Phaser.Scene {
       callback: () => {
         if (!this.isWalking) return;
         frame = (frame + 1) % 3;
-        const keys = ['eddie', 'eddie_walk1', 'eddie_walk2'];
-        this.player.setTexture(keys[frame]);
+        const walkFrames = [8, 9, 10]; // Side-facing walk cycle (row 2)
+        this.player.setFrame(walkFrames[frame]);
         if (!this.facingRight) this.player.setFlipX(true);
       },
       loop: true
@@ -359,7 +359,7 @@ export class BackAlleyScene extends Phaser.Scene {
         this.player.y = this.walkTarget.y;
         this.isWalking = false;
         this.walkTarget = null;
-        this.player.setTexture('eddie');
+        this.player.setFrame(0); // Front-facing idle
         if (!this.facingRight) this.player.setFlipX(true);
         if (this.walkAnimTimer) {
           this.walkAnimTimer.destroy();

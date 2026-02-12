@@ -20,15 +20,18 @@ export class PreloadScene extends Phaser.Scene {
       fontFamily: 'monospace'
     }).setOrigin(0.5);
 
+    // Load Eddie sprite sheet (4x4 grid, 256x256 per frame)
+    this.load.spritesheet('eddie_sheet', 'assets/sprites/Gemini_Generated_Image_rii16crii16crii1.png', {
+      frameWidth: 256,
+      frameHeight: 256
+    });
+
     // Generate all placeholder sprites as textures
     this.generatePlaceholderSprites();
   }
 
   generatePlaceholderSprites(): void {
-    // Eddie - the protagonist (simple character shape)
-    this.generateCharacterSprite('eddie', 0x4488cc, 24, 48);
-    this.generateCharacterSprite('eddie_walk1', 0x4488cc, 24, 48, true);
-    this.generateCharacterSprite('eddie_walk2', 0x4488cc, 24, 48, false, true);
+    // Eddie sprites loaded from sprite sheet (eddie_sheet) in preload()
 
     // NPCs
     this.generateCharacterSprite('sal', 0x886644, 28, 48);
